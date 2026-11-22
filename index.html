@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul Bhosale — Backend Java Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --accent: #06b6d4;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --text-bright: #f8fafc;
+            --border: #334155;
+            --success: #10b981;
+            --gradient-1: linear-gradient(135deg, #2563eb, #06b6d4);
+            --gradient-2: linear-gradient(135deg, #7c3aed, #2563eb);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            transition: box-shadow 0.3s;
+        }
+        .navbar.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
+        .nav-container {
+            max-width: 1100px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            height: 64px;
+        }
+        .nav-logo {
+            font-weight: 800;
+            font-size: 1.3rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .nav-links { display: flex; gap: 8px; list-style: none; }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: all 0.25s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-bright);
+            background: rgba(37, 99, 235, 0.15);
+        }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(37,99,235,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(6,182,212,0.06) 0%, transparent 50%);
+            animation: heroGlow 15s ease-in-out infinite alternate;
+        }
+        @keyframes heroGlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-30px, -20px); }
+        }
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            max-width: 750px;
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 50px;
+            background: rgba(37, 99, 235, 0.15);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            color: var(--primary-light);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.6s ease;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            color: var(--text-bright);
+            line-height: 1.1;
+            margin-bottom: 12px;
+            letter-spacing: -1.5px;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+        .hero h2 {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+        .hero h2 span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+        .hero-links {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.08);
+            transform: translateY(-2px);
+        }
+
+        /* ===== SECTIONS ===== */
+        section { padding: 80px 24px; }
+        .container { max-width: 1100px; margin: auto; }
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-bright);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .section-line {
+            width: 50px;
+            height: 3px;
+            background: var(--gradient-1);
+            border-radius: 3px;
+            margin: 12px auto 0;
+        }
+
+        /* ===== ABOUT ===== */
+        .about-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            line-height: 1.9;
+            font-size: 1.02rem;
+            color: var(--text);
+            position: relative;
+            overflow: hidden;
+        }
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-1);
+        }
+
+        /* ===== SKILLS ===== */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .skill-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .skill-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        .skill-card h3 {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-light);
+            margin-bottom: 14px;
+        }
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .skill-tag {
+            padding: 6px 14px;
+            border-radius: 8px;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.25s;
+        }
+        .skill-tag:hover {
+            background: rgba(37, 99, 235, 0.2);
+            border-color: var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        /* ===== EXPERIENCE ===== */
+        .timeline { position: relative; padding-left: 40px; }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent), transparent);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -33px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid var(--bg);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+        }
+        .timeline-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            transition: all 0.3s;
+        }
+        .timeline-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .timeline-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-bright);
+        }
+        .timeline-date {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(6, 182, 212, 0.1);
+            padding: 4px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+        .timeline-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .timeline-domain {
+            font-size: 0.78rem;
+            color: var(--primary-light);
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+        .timeline-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .timeline-card ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 0.92rem;
+            color: var(--text);
+        }
+        .timeline-card ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--primary-light);
+            font-weight: bold;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+        .tech-badge {
+            padding: 3px 10px;
+            border-radius: 6px;
+            background: rgba(124, 58, 237, 0.12);
+            border: 1px solid rgba(124, 58, 237, 0.25);
+            color: #c4b5fd;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ===== EDUCATION ===== */
+        .edu-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            max-width: 700px;
+            margin: auto;
+            transition: all 0.3s;
+        }
+        .edu-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+        .edu-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .edu-info h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 4px;
+        }
+        .edu-info p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .edu-info .edu-year {
+            font-size: 0.82rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* ===== CONTACT ===== */
+        #contact { background: linear-gradient(to bottom, var(--bg), #0c1222); }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 850px;
+            margin: auto;
+        }
+        .contact-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+        }
+        .contact-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(37, 99, 235, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            font-size: 1.3rem;
+        }
+        .contact-card h3 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 6px;
+        }
+        .contact-card p {
+            font-size: 0.88rem;
+            color: var(--primary-light);
+            word-break: break-all;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 30px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== BACK TO TOP ===== */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            z-index: 100;
+        }
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background: rgba(15, 23, 42, 0.97);
+                backdrop-filter: blur(16px);
+                border-bottom: 1px solid var(--border);
+                padding: 16px;
+                gap: 4px;
+            }
+            .nav-links.open { display: flex; }
+            .about-card { padding: 28px; }
+            .timeline { padding-left: 30px; }
+            .timeline-dot { left: -23px; }
+            .timeline-card { padding: 20px; }
+            .edu-card { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">Rahul Bhosale</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🚀 Open to Opportunities</div>
+            <h1>Rahul Bhosale</h1>
+            <h2>Backend Java Developer · <span>Spring Boot</span> · REST APIs · Fintech</h2>
+            <p style="color: var(--text-muted); margin-bottom: 28px; font-size: 0.95rem;">
+                Mumbai, India · ~4 Years of Experience
+            </p>
+            <div class="hero-links">
+                <a href="mailto:rahulbhosale2563@gmail.com" class="btn btn-primary">✉️ Email Me</a>
+                <a href="https://linkedin.com/in/rahul-bhosale-68b866246" target="_blank" class="btn btn-outline">🔗 LinkedIn</a>
+                <a href="tel:+919822526974" class="btn btn-outline">📱 Call</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>About Me</h2>
+                <p>Professional Summary</p>
+                <div class="section-line"></div>
+            </div>
+            <div class="about-card fade-in">
+                Backend Java Developer with nearly <strong>4 years of experience</strong> developing and maintaining fintech
+                applications using <strong>Java, Spring Boot, Microservices, REST APIs, MongoDB, MySQL,</strong> and <strong>Redis</strong>. 
+                Worked on <strong>Loan Origination Systems (LOS)</strong>, <strong>PSB Exchange platform</strong>, <strong>Activiti workflows</strong>, 
+                and <strong>third-party API integrations</strong>. Experienced in backend development, production issue resolution, 
+                and integrating external services. Regularly use <strong>AI tools</strong> for code analysis, debugging, 
+                technical research, and development productivity.
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" style="background: linear-gradient(to bottom, var(--bg), #0e1629, var(--bg));">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Technical Skills</h2>
+                <p>Technologies & tools I work with</p>
+                <div class="section-line"></div>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card fade-in">
+                    <h3>Programming</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Core Java</span>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <h3>Frameworks & Libraries</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Spring Boot</span>
+                        <span class="skill-tag">Spring Security</span>
+                        <span class="skill-tag">Hibernate</span>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <h3>Architecture & APIs</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Microservices</span>
+                        <span class="skill-tag">RESTful APIs</span>
+                        <span class="skill-tag">Third-Party Integration</span>
+                        <span class="skill-tag">Webhooks</span>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <h3>Databases & Caching</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">MongoDB</span>
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">Redis</span>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <h3>Workflow & Orchestration</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Activiti</span>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <h3>Developer Tools</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">GitHub</span>
+                        <span class="skill-tag">Bitbucket</span>
+                        <span class="skill-tag">Jira</span>
+                        <span class="skill-tag">Postman</span>
+                        <span class="skill-tag">IntelliJ IDEA</span>
+                        <span class="skill-tag">Studio 3T</span>
+                        <span class="skill-tag">WinSCP</span>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <h3>AI & Productivity</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Anthropic Claude</span>
+                        <span class="skill-tag">LLM Tools</span>
+                        <span class="skill-tag">AI-assisted Debugging</span>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <h3>Engineering Practices</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Agile</span>
+                        <span class="skill-tag">SDLC</span>
+                        <span class="skill-tag">Code Reviews</span>
+                        <span class="skill-tag">Debugging</span>
+                        <span class="skill-tag">Performance Optimization</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Professional Experience</h2>
+                <p>VEEFIN Solutions — Mumbai, India</p>
+                <div class="section-line"></div>
+            </div>
+            <div class="timeline">
+
+                <!-- LOS V3 -->
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-header">
+                            <span class="timeline-title">Loan Origination System (LOS V3)</span>
+                            <span class="timeline-date">Mar 2023 – Present</span>
+                        </div>
+                        <div class="timeline-subtitle">Backend Java Developer</div>
+                        <div class="timeline-domain">Domain: Fintech / Lending</div>
+                        <ul>
+                            <li>Worked on backend services for the loan origination system using Java, Spring Boot, and Spring Security.</li>
+                            <li>Implemented features for borrower data collection, document verification, underwriting, and loan approval.</li>
+                            <li>Worked with MongoDB and MySQL for application data storage and retrieval.</li>
+                            <li>Developed REST APIs and handled production issues, debugging, and application enhancements.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Java</span>
+                            <span class="tech-badge">Spring Boot</span>
+                            <span class="tech-badge">Spring Security</span>
+                            <span class="tech-badge">REST APIs</span>
+                            <span class="tech-badge">MongoDB</span>
+                            <span class="tech-badge">MySQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PSB Exchange -->
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-header">
+                            <span class="timeline-title">PSB Exchange Platform</span>
+                        </div>
+                        <div class="timeline-subtitle">Backend Java Developer</div>
+                        <div class="timeline-domain">Domain: Fintech / Banking</div>
+                        <ul>
+                            <li>Developed backend features for a fintech platform connecting lenders with banking systems.</li>
+                            <li>Worked on template configuration, data listing, customer deduplication, and uniqueness validation modules.</li>
+                            <li>Integrated third-party REST APIs for communication with external banking and verification services.</li>
+                            <li>Developed automated workflows using Activiti and fixed production issues.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Java</span>
+                            <span class="tech-badge">Spring Boot</span>
+                            <span class="tech-badge">REST APIs</span>
+                            <span class="tech-badge">Activiti</span>
+                            <span class="tech-badge">MongoDB</span>
+                            <span class="tech-badge">MySQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCF Transaction Module -->
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-header">
+                            <span class="timeline-title">Transaction Module (SCF Integration)</span>
+                        </div>
+                        <div class="timeline-subtitle">Backend Developer / Module Owner</div>
+                        <div class="timeline-domain">Domain: Supply Chain Finance</div>
+                        <ul>
+                            <li>Worked as a backend developer and module owner for the Transaction Module.</li>
+                            <li>Implemented new features and managed dependencies between connected application modules.</li>
+                            <li>Integrated Supply Chain Finance (SCF) product APIs with the transaction engine.</li>
+                            <li>Worked on transaction processing and workflow automation.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Java</span>
+                            <span class="tech-badge">Spring Boot</span>
+                            <span class="tech-badge">REST APIs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Gateway -->
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-header">
+                            <span class="timeline-title">API Gateway & Third-Party Integrations</span>
+                        </div>
+                        <div class="timeline-subtitle">Backend Java Developer</div>
+                        <div class="timeline-domain">Domain: Fintech API Integration</div>
+                        <ul>
+                            <li>Integrated external APIs for MCA, GST, and ITR verification, lead creation, and webhook communication.</li>
+                            <li>Implemented request and response processing using MongoDB.</li>
+                            <li>Handled nested JSON structures, lists, and maps in the common-gateway-service.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Java</span>
+                            <span class="tech-badge">Spring Boot</span>
+                            <span class="tech-badge">REST APIs</span>
+                            <span class="tech-badge">MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multi Offer -->
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-header">
+                            <span class="timeline-title">Multi Offer Module</span>
+                        </div>
+                        <div class="timeline-subtitle">Backend Java Developer</div>
+                        <div class="timeline-domain">Domain: Fintech / Lending</div>
+                        <ul>
+                            <li>Developed backend features and enhancements for the Multi Offer lending module.</li>
+                            <li>Used Java and Spring Boot to implement module-level changes and support application functionality.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Java</span>
+                            <span class="tech-badge">Spring Boot</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education" style="background: linear-gradient(to bottom, var(--bg), #0e1629, var(--bg));">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Education</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="edu-card fade-in">
+                <div class="edu-icon">🎓</div>
+                <div class="edu-info">
+                    <h3>Bachelor of Engineering</h3>
+                    <p>Dnyanshree Institute of Engineering and Technology, Satara</p>
+                    <p>Chh. Shivaji University, Kolhapur</p>
+                    <div class="edu-year">2017 – 2020</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Get In Touch</h2>
+                <p>Let's connect and build something great</p>
+                <div class="section-line"></div>
+            </div>
+            <div class="contact-grid">
+                <a href="mailto:rahulbhosale2563@gmail.com" class="contact-card fade-in">
+                    <div class="contact-icon">✉️</div>
+                    <h3>Email</h3>
+                    <p>rahulbhosale2563@gmail.com</p>
+                </a>
+                <a href="tel:+919822526974" class="contact-card fade-in">
+                    <div class="contact-icon">📱</div>
+                    <h3>Phone</h3>
+                    <p>+91 9822526974</p>
+                </a>
+                <a href="https://linkedin.com/in/rahul-bhosale-68b866246" target="_blank" class="contact-card fade-in">
+                    <div class="contact-icon">🔗</div>
+                    <h3>LinkedIn</h3>
+                    <p>rahul-bhosale-68b866246</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2024 Rahul Bhosale. Built with ❤️</p>
+    </footer>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Back to top">↑</button>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
+        // Close menu on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('open');
+            });
+        });
+
+        // Active nav link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY + 100;
+            sections.forEach(section => {
+                const top = section.offsetTop;
+                const height = section.offsetHeight;
+                const id = section.getAttribute('id');
+                const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+                if (link) {
+                    link.classList.toggle('active', scrollY >= top && scrollY < top + height);
+                }
+            });
+        });
+
+        // Scroll animations (Intersection Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('show', window.scrollY > 500);
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
